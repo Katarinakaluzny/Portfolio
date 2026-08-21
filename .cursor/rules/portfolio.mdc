@@ -1,0 +1,22 @@
+---
+description: Portfolio project rules
+globs: ["**/*.tsx", "**/*.ts", "**/*.css"]
+alwaysApply: true
+---
+
+# Portfolio Design Rules
+
+## Follow the designs exactly
+- Always implement what the user describes and shows in their Figma designs — do not deviate.
+- If something the user asks for is not working, keep iterating until it works exactly as requested. Do not give up or offer workarounds.
+
+## Layout: horizontal project gallery
+- Home presents a project immediately (after the KATARINA load-in). No vertical card stack, no film-reel stages.
+- Projects sit in a sideways rail. Native CSS `scroll-snap-type: x mandatory` with `snap-stop: always`. One gesture lands on the next project.
+- Convert vertical wheel to horizontal scroll on the rail. Do not skip projects.
+- Bottom-right menu: Home, About me, Resume. Bottom-center: scroll view and list view toggles.
+- Name mark types in centered, then settles as the top-left logo.
+
+## Reference
+- Figma: project-first horizontal layout, Meshed Display titles, cyan KATA|RINA mark.
+- Do not revive stacked peeking cards, wheel-lock animation, or glass card decks.

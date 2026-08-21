@@ -1,26 +1,54 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  --color-warm-gray: #d9d7d3;
+  --color-warm-gray-dark: #ababab;
+  --color-cyan-mark: #00a7cd;
+  --color-text-primary: #414141;
+  --color-text-secondary: #7b7b7b;
+  --color-text-nav: #636363;
+  --color-text-nav-active: #262626;
+
+  --font-display: var(--font-meshed), serif;
+  --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+@layer base {
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  html, body {
+    height: 100%;
+    overflow: hidden;
+  }
+
+  body {
+    font-family: var(--font-body);
+    background: var(--color-warm-gray);
+    color: var(--color-text-primary);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
+
+.letter {
+  opacity: 0;
+  animation: fadeIn 0.15s ease forwards;
+}
+
+.letter-0 { animation-delay: 0.16s; }
+.letter-1 { animation-delay: 0.32s; }
+.letter-2 { animation-delay: 0.48s; }
+.letter-3 { animation-delay: 0.64s; }
+.letter-4 { animation-delay: 0.80s; }
+.letter-5 { animation-delay: 0.96s; }
+.letter-6 { animation-delay: 1.12s; }
+.letter-7 { animation-delay: 1.28s; }
