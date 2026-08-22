@@ -8,11 +8,11 @@ const RIGHT_COL = ["R", "I", "N", "A"];
 
 const TYPING_TOTAL_MS = 1280 + 150;
 const HOLD_DURATION = 1800;
-const TRANSITION_DURATION = 800;
+const TRANSITION_DURATION = 700;
 
 const PROJECTS = [
   {
-    tag: "AI for Design | Implemented",
+    tag: "AI for Design • Implemented",
     title: "For UI Studio",
     description: "Foundational work for Spotify's AI prototyping tool, used by designers today.",
     duration: "2 months",
@@ -21,14 +21,14 @@ const PROJECTS = [
     labels: ["AI", "Prototyping", "Design Tools"],
     sections: [
       { type: "about" as const, text: "Exploratory internship project, turned into this and this project happens across summer of 2025 which was first a bit like ok how can we do this and then?\n\nBasically we weren't sure and then I turned out with this and it became the foundational work for this and this which was cool and today UI Studio is being used by so many designers at Spotify." },
-      { type: "body" as const, text: "Exploratory internship project, turned into this and this project happens across summer of 2025 which was first a bit like ok how can we do this and then?\n\nBasically we weren't sure and then I turned out with this and it became the foundational work for this and this which was cool and today UI Studio is being used by so many designers at Spotify. It all did this and this which was cool.\n\n1. Process step\n2. Another step\n3. Third step\n\nAnd we resulted in this, collaborating with senior designers working with the design systems." },
+      { type: "body" as const, text: "Basically we weren't sure and then I turned out with this and it became the foundational work for this and this which was cool.\n\n1. Process step\n2. Another step\n3. Third step\n\nAnd we resulted in this, collaborating with senior designers working with the design systems." },
       { type: "body" as const, text: "The final implementation shipped to 500+ designers internally. We built a plugin architecture that allowed teams to extend the tool with their own patterns.\n\nKey learnings from this phase included understanding how AI suggestions need to be contextual to the design system being used." },
       { type: "body" as const, text: "Impact metrics after 6 months of usage:\n\n• 73% reduction in repetitive layout tasks\n• 4.2x faster prototyping for common flows\n• Adopted by 12 product teams\n\nThe tool continues to evolve with new model capabilities." },
       { type: "body" as const, text: "Reflections and next steps — the project opened doors for thinking about AI-assisted design at scale. What started as an internship exploration became core infrastructure." },
     ],
   },
   {
-    tag: "Design System | Shipped",
+    tag: "Design System • Shipped",
     title: "Encore Web",
     description: "Building and scaling Spotify's unified design system across web surfaces.",
     duration: "6 months",
@@ -44,7 +44,7 @@ const PROJECTS = [
     ],
   },
   {
-    tag: "Mobile Experience | Shipped",
+    tag: "Mobile Experience • Shipped",
     title: "Listening Party",
     description: "Real-time shared listening sessions for groups, integrated into the social layer.",
     duration: "3 months",
@@ -60,7 +60,7 @@ const PROJECTS = [
     ],
   },
   {
-    tag: "Data Visualization | Concept",
+    tag: "Data Visualization • Concept",
     title: "Wrapped Stories",
     description: "Reimagining Spotify Wrapped as a year-long narrative told through micro-moments.",
     duration: "1 month",
@@ -76,7 +76,7 @@ const PROJECTS = [
     ],
   },
   {
-    tag: "Accessibility | Shipped",
+    tag: "Accessibility • Shipped",
     title: "Inclusive Play",
     description: "Making the playback experience fully accessible across assistive technologies.",
     duration: "4 months",
@@ -92,7 +92,7 @@ const PROJECTS = [
     ],
   },
   {
-    tag: "Brand Identity | Freelance",
+    tag: "Brand Identity • Freelance",
     title: "Forma Studio",
     description: "Visual identity and website for an architecture studio based in Stockholm.",
     duration: "5 weeks",
@@ -114,6 +114,7 @@ const DIAGONAL_OFFSET = { x: -35, y: 42 };
 export default function Page() {
   const [phase, setPhase] = useState<"typing" | "transitioning" | "done">("typing");
   const [selectedProject, setSelectedProject] = useState<number | null>(null);
+  const [showAbout, setShowAbout] = useState(false);
   const [logoHovered, setLogoHovered] = useState(false);
   const scrollPos = useRef(0);
   const velocity = useRef(0);
@@ -187,7 +188,6 @@ export default function Page() {
     return () => window.removeEventListener("wheel", handleWheel);
   }, [phase]);
 
-  const isCenter = phase === "typing";
   const isDone = phase === "done";
 
   return (
@@ -200,38 +200,82 @@ export default function Page() {
         backgroundColor: "#d9d7d3",
       }}
     >
-      {/* KATA | RINA letters — animate from center to top-left corner */}
+      {/* KATA | RINA letters — centered load-in, fades out */}
       <div
         style={{
           position: "absolute",
           display: "flex",
-          flexDirection: isCenter ? "row" : "column",
-          alignItems: isCenter ? "center" : "flex-start",
-          justifyContent: isCenter ? "center" : "flex-start",
-          gap: isCenter ? "4.5vw" : "24px",
-          fontSize: isCenter ? "clamp(80px, 9vw, 140px)" : "16px",
-          lineHeight: isCenter ? "1.1" : "1.5",
-          top: isCenter ? "50%" : "28px",
-          left: isCenter ? "50%" : "28px",
-          transform: isCenter ? "translate(-50%, -50%)" : "translate(0, 0)",
-          transition:
-            phase === "transitioning"
-              ? `all ${TRANSITION_DURATION}ms cubic-bezier(0.4, 0, 0.2, 1)`
-              : "none",
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: "4.5vw",
+          fontSize: "clamp(80px, 9vw, 140px)",
+          lineHeight: "1.1",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          opacity: phase === "typing" ? 1 : 0,
+          transition: `opacity ${TRANSITION_DURATION}ms cubic-bezier(0.4, 0, 0.2, 1)`,
           zIndex: 10,
+          pointerEvents: "none",
+        }}
+      >
+        {/* Left column — KATA */}
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+          {LEFT_COL.map((letter, i) => (
+            <span
+              key={`l-${i}`}
+              className={`font-display letter letter-${i}`}
+              style={{ color: "#176C8C" }}
+            >
+              {letter}
+            </span>
+          ))}
+        </div>
+
+        {/* Right column — RINA */}
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+          {RIGHT_COL.map((letter, i) => (
+            <span
+              key={`r-${i}`}
+              className={`font-display letter letter-${i + LEFT_COL.length}`}
+              style={{ color: "#176C8C" }}
+            >
+              {letter}
+            </span>
+          ))}
+        </div>
+      </div>
+
+      {/* Small logo — fades in after transition */}
+      <div
+        style={{
+          position: "absolute",
+          top: 28,
+          left: 28,
+          display: "flex",
+          flexDirection: "column",
+          gap: 24,
+          alignItems: "flex-start",
+          zIndex: 10,
+          opacity: isDone ? 1 : 0,
+          transition: `opacity 0.6s ease`,
+          pointerEvents: isDone ? "auto" : "none",
         }}
       >
         {/* Logo letters */}
         <div
-          onClick={() => { if (selectedProject !== null) setSelectedProject(null); }}
+          onClick={() => { if (selectedProject !== null) setSelectedProject(null); if (showAbout) setShowAbout(false); }}
           onMouseEnter={() => { if (isDone) setLogoHovered(true); }}
           onMouseLeave={() => setLogoHovered(false)}
           style={{
             display: "flex",
-            gap: isCenter ? "4.5vw" : "4px",
+            gap: "4px",
             alignItems: "center",
             justifyContent: "center",
             cursor: isDone ? "pointer" : "default",
+            fontSize: 16,
+            lineHeight: 1.5,
           }}
         >
           {/* Left column — KATA */}
@@ -239,8 +283,8 @@ export default function Page() {
             {LEFT_COL.map((letter, i) => (
               <span
                 key={`l-${i}`}
-                className={`font-display letter letter-${i}`}
-                style={{ color: logoHovered ? "#414141" : "#00a7cd", transition: "color 0.2s ease" }}
+                className="font-display"
+                style={{ color: logoHovered ? "#414141" : "#176C8C", transition: "color 0.2s ease" }}
               >
                 {letter}
               </span>
@@ -252,8 +296,8 @@ export default function Page() {
             {RIGHT_COL.map((letter, i) => (
               <span
                 key={`r-${i}`}
-                className={`font-display letter letter-${i + LEFT_COL.length}`}
-                style={{ color: logoHovered ? "#414141" : "#00a7cd", transition: "color 0.2s ease" }}
+                className="font-display"
+                style={{ color: logoHovered ? "#414141" : "#176C8C", transition: "color 0.2s ease" }}
               >
                 {letter}
               </span>
@@ -269,7 +313,7 @@ export default function Page() {
             gap: 12,
             alignItems: "center",
             alignSelf: "center",
-            opacity: isDone && selectedProject === null ? 1 : 0,
+            opacity: isDone && selectedProject === null && !showAbout ? 1 : 0,
             transition: "opacity 0.4s ease 0.3s",
           }}
         >
@@ -294,10 +338,10 @@ export default function Page() {
         style={{
           position: "absolute",
           inset: 0,
-          opacity: isDone && selectedProject === null ? 1 : isDone && selectedProject !== null ? 0 : 0,
-          transform: isDone && selectedProject === null ? "translateY(0)" : "translateY(20px)",
+          opacity: isDone && selectedProject === null && !showAbout ? 1 : 0,
+          transform: isDone && selectedProject === null && !showAbout ? "translateY(0)" : "translateY(20px)",
           transition: `all 0.6s cubic-bezier(0.4, 0, 0.2, 1)`,
-          pointerEvents: isDone && selectedProject === null ? "auto" : "none",
+          pointerEvents: isDone && selectedProject === null && !showAbout ? "auto" : "none",
         }}
       >
         {/* Diagonal project rail */}
@@ -350,13 +394,13 @@ export default function Page() {
 
           {/* View toggles */}
           <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 3 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 3, opacity: 1 }}>
               <div style={{ width: 3, height: 10, backgroundColor: "#414141" }} />
               <div style={{ width: 5, height: 13, backgroundColor: "#414141" }} />
               <div style={{ width: 3, height: 10, backgroundColor: "#414141" }} />
             </div>
             <div style={{ width: 1, height: 10, backgroundColor: "rgba(65,65,65,0.4)", margin: "0 4px" }} />
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style={{ opacity: 0.35 }}>
               <rect x="0" y="1" width="14" height="2.5" fill="#414141" />
               <rect x="0" y="5.75" width="14" height="2.5" fill="#414141" />
               <rect x="0" y="10.5" width="14" height="2.5" fill="#414141" />
@@ -366,8 +410,8 @@ export default function Page() {
           {/* Navigation */}
           <nav style={{ display: "flex", alignItems: "center", gap: 48, fontSize: 14 }}>
             <span style={{ fontWeight: 500, color: "#262626" }}>Home</span>
-            <span style={{ color: "#636363" }}>About me</span>
-            <span style={{ color: "#636363" }}>Resume</span>
+            <NavLink label="About me" onClick={() => setShowAbout(true)} />
+            <NavLink label="Resume" onClick={() => {}} />
           </nav>
         </div>
       </div>
@@ -387,6 +431,21 @@ export default function Page() {
             project={PROJECTS[selectedProject]}
             onBack={() => setSelectedProject(null)}
           />
+        </div>
+      )}
+
+      {/* About me view */}
+      {showAbout && (
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            opacity: isDone && showAbout ? 1 : 0,
+            transition: "opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1)",
+            pointerEvents: showAbout ? "auto" : "none",
+          }}
+        >
+          <AboutMe onBack={() => setShowAbout(false)} />
         </div>
       )}
     </div>
@@ -422,7 +481,7 @@ function ProjectCard({ project, textOpacity }: { project: typeof PROJECTS[number
           width: 580,
           height: 290,
           flexShrink: 0,
-          borderRadius: 20,
+          borderRadius: 8,
           background: "linear-gradient(135deg, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0.18) 100%)",
           backdropFilter: "blur(24px)",
           WebkitBackdropFilter: "blur(24px)",
@@ -438,7 +497,7 @@ function ProjectCard({ project, textOpacity }: { project: typeof PROJECTS[number
           style={{
             position: "absolute",
             inset: 0,
-            borderRadius: 20,
+            borderRadius: 8,
             background: "linear-gradient(160deg, rgba(255,255,255,0.4) 0%, transparent 35%, transparent 80%, rgba(255,255,255,0.08) 100%)",
             pointerEvents: "none",
           }}
@@ -446,7 +505,7 @@ function ProjectCard({ project, textOpacity }: { project: typeof PROJECTS[number
       </div>
 
       {/* Project metadata */}
-      <div style={{ display: "flex", flexDirection: "column", gap: 28, width: 220, alignSelf: "stretch", paddingTop: 20, opacity: textOpacity }}>
+      <div style={{ display: "flex", flexDirection: "column", gap: 28, width: 220, justifyContent: "center", opacity: textOpacity }}>
         <MetaField label="Duration" value={project.duration} />
         <MetaField label="Role" value={project.role} />
         <MetaField label="Project" value={project.project} />
@@ -500,7 +559,27 @@ function ProjectDetail({
     return () => window.removeEventListener("wheel", handleWheel);
   }, [totalSections]);
 
-  const section = project.sections[currentSection];
+  const [sectionVisible, setSectionVisible] = useState(true);
+  const [displaySection, setDisplaySection] = useState(currentSection);
+
+  useEffect(() => {
+    if (currentSection !== displaySection) {
+      setSectionVisible(false);
+      const timer = setTimeout(() => {
+        setDisplaySection(currentSection);
+        setSectionVisible(true);
+      }, 200);
+      return () => clearTimeout(timer);
+    }
+  }, [currentSection, displaySection]);
+
+  const shownSection = project.sections[displaySection];
+  const [entered, setEntered] = useState(false);
+
+  useEffect(() => {
+    const timer = requestAnimationFrame(() => setEntered(true));
+    return () => cancelAnimationFrame(timer);
+  }, []);
 
   return (
     <div style={{ position: "relative", width: "100%", height: "100%" }}>
@@ -513,29 +592,19 @@ function ProjectDetail({
           display: "flex",
           flexDirection: "column",
           gap: 28,
+          opacity: entered ? 1 : 0,
+          transform: entered ? "translateY(0)" : "translateY(12px)",
+          transition: "opacity 0.5s ease, transform 0.5s ease",
         }}
       >
-        <button
-          onClick={onBack}
-          style={{
-            background: "none",
-            border: "none",
-            cursor: "pointer",
-            fontSize: 13,
-            color: "#414141",
-            padding: 0,
-            textAlign: "left",
-          }}
-        >
-          &lt; go back
-        </button>
+        <GoBackButton onClick={onBack} />
         <h1
           className="font-display"
           onMouseEnter={() => setTitleHovered(true)}
           onMouseLeave={() => setTitleHovered(false)}
           style={{
             fontSize: "clamp(80px, 9vw, 120px)",
-            color: titleHovered ? "#00a7cd" : "#414141",
+            color: titleHovered ? "#176C8C" : "#414141",
             lineHeight: 0.9,
             margin: 0,
             transition: "color 0.2s ease",
@@ -551,17 +620,19 @@ function ProjectDetail({
           position: "absolute",
           top: "45%",
           left: "50%",
-          transform: "translate(-50%, -50%)",
+          transform: entered ? "translate(-50%, -50%)" : "translate(-50%, -46%)",
           display: "flex",
           alignItems: "flex-start",
           gap: 14,
+          opacity: entered ? 1 : 0,
+          transition: "opacity 0.6s ease 0.25s, transform 0.6s ease 0.25s",
         }}
       >
         {/* Main content: text + image */}
         <div style={{ display: "flex", alignItems: "flex-start", gap: 0 }}>
           {/* Left column: conditional chips/about or just text */}
-          <div style={{ display: "flex", flexDirection: "column", gap: 0, width: 320, marginRight: "16vw", paddingTop: 18 }}>
-            {section.type === "about" ? (
+          <div style={{ display: "flex", flexDirection: "column", gap: 0, width: 320, marginRight: "16vw", paddingTop: 18, opacity: sectionVisible ? 1 : 0, transform: sectionVisible ? "translateY(0)" : "translateY(6px)", transition: "opacity 0.2s ease, transform 0.2s ease" }}>
+            {shownSection.type === "about" ? (
               <>
                 {/* Chips + About heading */}
                 <div style={{ display: "flex", flexDirection: "column", gap: 35, marginBottom: 6 }}>
@@ -585,28 +656,48 @@ function ProjectDetail({
                   <span style={{ fontSize: 11, color: "#7b7b7b" }}>About</span>
                 </div>
                 <p style={{ fontSize: 13, color: "#414141", lineHeight: 1.7, whiteSpace: "pre-line", margin: 0 }}>
-                  {section.text}
+                  {shownSection.text}
                 </p>
               </>
             ) : (
               <p style={{ fontSize: 13, color: "#414141", lineHeight: 1.7, whiteSpace: "pre-line", margin: 0 }}>
-                {section.text}
+                {shownSection.text}
               </p>
             )}
           </div>
 
-          {/* Right: image placeholder */}
+          {/* Right: image — liquid glass */}
           <div
             onMouseEnter={() => setTitleHovered(true)}
             onMouseLeave={() => setTitleHovered(false)}
             style={{
+              position: "relative",
               width: "48vw",
               maxWidth: 720,
               height: "44vh",
-              backgroundColor: "#ababab",
               flexShrink: 0,
+              borderRadius: 8,
+              background: "linear-gradient(135deg, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0.18) 100%)",
+              backdropFilter: "blur(24px)",
+              WebkitBackdropFilter: "blur(24px)",
+              border: "1px solid rgba(255,255,255,0.55)",
+              boxShadow:
+                "0 8px 32px rgba(0,0,0,0.06), " +
+                "inset 0 1px 1px rgba(255,255,255,0.7), " +
+                "inset 0 -1px 2px rgba(0,0,0,0.03)",
+              overflow: "hidden",
             }}
-          />
+          >
+            <div
+              style={{
+                position: "absolute",
+                inset: 0,
+                borderRadius: 8,
+                background: "linear-gradient(160deg, rgba(255,255,255,0.4) 0%, transparent 35%, transparent 80%, rgba(255,255,255,0.08) 100%)",
+                pointerEvents: "none",
+              }}
+            />
+          </div>
         </div>
 
         {/* Vertical dot navigation — liquid glass */}
@@ -640,7 +731,7 @@ function ProjectDetail({
                 width: 8,
                 height: 8,
                 borderRadius: "50%",
-                backgroundColor: i === currentSection ? "#00a7cd" : "#606060",
+                backgroundColor: i === currentSection ? "#176C8C" : "#606060",
                 cursor: "pointer",
                 transition: "background-color 0.2s ease",
               }}
@@ -649,6 +740,30 @@ function ProjectDetail({
         </div>
       </div>
     </div>
+  );
+}
+
+function GoBackButton({ onClick }: { onClick: () => void }) {
+  const [hovered, setHovered] = useState(false);
+  return (
+    <button
+      onClick={onClick}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        background: "none",
+        border: "none",
+        cursor: "pointer",
+        fontSize: 15,
+        color: "#414141",
+        padding: 0,
+        textAlign: "left",
+        fontWeight: hovered ? 600 : 400,
+        transition: "font-weight 0.2s ease",
+      }}
+    >
+      &lt; go back
+    </button>
   );
 }
 
@@ -700,5 +815,168 @@ function SocialLink({ href, label, children }: { href: string; label: string; ch
         {label}
       </span>
     </a>
+  );
+}
+
+function NavLink({ label, onClick }: { label: string; onClick: () => void }) {
+  const [hovered, setHovered] = useState(false);
+
+  return (
+    <span
+      onClick={onClick}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        color: hovered ? "#176C8C" : "#636363",
+        cursor: "pointer",
+        transition: "color 0.2s ease",
+      }}
+    >
+      {label}
+    </span>
+  );
+}
+
+const ABOUT_IMAGES = ["/me.png", "/me-2.png", "/me-6.png", "/me-8.png", "/me-3.png", "/me-4.png", "/me-5.png", "/me-7.png"];
+const ABOUT_COLORS = ["#e08a3a", "#3a7ab5", "#e8a832", "#7a6b5e", "#d64a6a", "#4a8c3f", "#2d7ab3", "#c45a20"];
+
+function AboutMe({ onBack }: { onBack: () => void }) {
+  const [titleHovered, setTitleHovered] = useState(false);
+  const [currentImg, setCurrentImg] = useState(0);
+  const [entered, setEntered] = useState(false);
+
+  useEffect(() => {
+    const timer = requestAnimationFrame(() => setEntered(true));
+    return () => cancelAnimationFrame(timer);
+  }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImg((prev) => (prev + 1) % ABOUT_IMAGES.length);
+    }, 4000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const handleImageClick = () => {
+    setCurrentImg((prev) => (prev + 1) % ABOUT_IMAGES.length);
+  };
+
+  return (
+    <div style={{ position: "relative", width: "100%", height: "100%" }}>
+      {/* Go back + title frame — bottom left corner */}
+      <div
+        style={{
+          position: "absolute",
+          bottom: 24,
+          left: 24,
+          display: "flex",
+          flexDirection: "column",
+          gap: 28,
+          opacity: entered ? 1 : 0,
+          transform: entered ? "translateY(0)" : "translateY(10px)",
+          transition: "opacity 0.5s ease, transform 0.5s ease",
+        }}
+      >
+        <GoBackButton onClick={onBack} />
+        <h1
+          className="font-display"
+          onMouseEnter={() => setTitleHovered(true)}
+          onMouseLeave={() => setTitleHovered(false)}
+          style={{
+            fontSize: "clamp(80px, 9vw, 120px)",
+            color: titleHovered ? ABOUT_COLORS[currentImg] : "#414141",
+            lineHeight: 0.9,
+            margin: 0,
+            transition: "color 0.2s ease",
+          }}
+        >
+          About me
+        </h1>
+      </div>
+
+      {/* Bio text — left side, like project page text column */}
+      <div
+        style={{
+          position: "absolute",
+          top: "45%",
+          left: "8vw",
+          transform: entered ? "translateY(-50%)" : "translateY(-46%)",
+          maxWidth: 440,
+          fontSize: 13,
+          color: "#414141",
+          lineHeight: 1.7,
+          opacity: entered ? 1 : 0,
+          transition: "opacity 0.6s ease 0.25s, transform 0.6s ease 0.25s",
+        }}
+      >
+        <p style={{ margin: 0 }}>I&apos;m making things make sense.</p>
+        <p style={{ margin: 0 }}>Currently a <span style={{ fontWeight: 500 }}>Product Designer at @Spotify.</span></p>
+        <p style={{ margin: "12px 0 0" }}>Long story short; I once thought I&apos;d be a ballerina, a dentist, then studied law, a bit of computer science engineering, until I finally found my way to product design.</p>
+        <p style={{ margin: "12px 0 0" }}>I like to zoom out. Beyond what something does for the user, I&apos;m interested in why it should exist, where it belongs, and how it fits into the product as a whole.</p>
+        <p style={{ margin: "12px 0 0" }}>I&apos;ve also had a front-row seat to how AI is changing the way designers work, having contributed, advocated for it and used AI in my own process. I&apos;m excited by how far that can go. But being able to make more, faster, only makes the why more important to me.</p>
+      </div>
+
+      {/* Ambient light glow behind image */}
+      <div
+        style={{
+          position: "absolute",
+          top: "5%",
+          right: "-2vw",
+          width: "55vw",
+          height: "90%",
+          borderRadius: "50%",
+          background: `radial-gradient(ellipse at center, ${ABOUT_COLORS[currentImg]}22 0%, ${ABOUT_COLORS[currentImg]}0d 45%, transparent 75%)`,
+          filter: "blur(80px)",
+          pointerEvents: "none",
+          opacity: entered ? 1 : 0,
+          transition: "opacity 1.2s ease 0.9s, background 1.4s ease",
+        }}
+      />
+
+      {/* Photo — right side, crossfade between images */}
+      <div
+        onMouseEnter={() => setTitleHovered(true)}
+        onMouseLeave={() => setTitleHovered(false)}
+        onClick={handleImageClick}
+        style={{
+          position: "absolute",
+          top: 0,
+          right: "8vw",
+          bottom: 0,
+          width: "38vw",
+          maxWidth: 580,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          padding: "32px 19px 0 19px",
+          overflow: "hidden",
+          cursor: "pointer",
+          opacity: entered ? 1 : 0,
+          transform: entered ? "translateY(0)" : "translateY(40px)",
+          transition: "opacity 0.7s ease 0.3s, transform 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.3s",
+        }}
+      >
+        {ABOUT_IMAGES.map((src, i) => (
+          <img
+            key={src}
+            src={src}
+            alt="Katarina"
+            style={{
+              position: "absolute",
+              top: 32,
+              left: 19,
+              right: 19,
+              bottom: 0,
+              width: "calc(100% - 38px)",
+              height: "calc(100% - 32px)",
+              objectFit: "cover",
+              objectPosition: "center top",
+              opacity: i === currentImg ? 1 : 0,
+              transition: "opacity 0.8s ease",
+            }}
+          />
+        ))}
+      </div>
+    </div>
   );
 }
